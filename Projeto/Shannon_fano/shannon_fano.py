@@ -4,9 +4,8 @@ class Elemento:
     """docstring for ClassName"""
     def __init__(self, valor):
         self.valor = valor
-        self.auto_info = 0
         self.codigo = ''
-
+        self.auto_info = 0
 
     def __str___(self):
         return str(self.valor) + ', ' + str(self.codigo)
@@ -14,6 +13,42 @@ class Elemento:
     def __repr__(self):
         return repr((self.valor, self.codigo))
 
+
+
+# Read File #
+def get_text():
+	arq = open('text.txt', 'r')
+	lines = arq.readlines()
+	text = ''
+	for line in lines:
+		text += line
+	return text
+
+def get_chars():
+	chars = []
+	for char in get_text():
+	 	chars.append(char)
+	print(chars)
+
+	# words = text.split()
+	# chars = []
+	# # for word in words:
+	# for char in text:
+	# 	# for char in word:
+ 	# chars.append(char)
+
+	return chars
+
+def frequencia():
+	chars = get_chars()
+	charset = set(chars)
+	freq_dict = {char: chars.count(char) for char in chars}
+	freq = []
+	for char in charset:
+		freq.append(freq_dict[char])
+	return freq
+
+# Encoding #
 def cria_elementos(conjunto):
     conjunto_aux = []
     soma = 0
@@ -50,7 +85,6 @@ def soma_elementos(conjunto):
     for elemento in conjunto:
         soma += elemento.valor
     return soma
-
 
 def shannon_fano(conjunto):
     prob = 0
@@ -121,15 +155,17 @@ def shannon_fano(conjunto):
         for i in range(0,elemento.valor):
             codigo += elemento.codigo
 
-    print(codigo)
+    # print(codigo)
+
+    return codigo
 
 def main():
     # F = [15,7,6,6,5]
-	F = [6,5,4,3,2,1]
+	# F = [6,5,4,3,2,1]
 	# F = [6,5,2,1,1]
-	F_aux = []
+	F = frequencia()
 	F_el = cria_elementos(F)
-	shannon_fano(F_el)
+	print(shannon_fano(F_el))
 
 
 if __name__ == "__main__":
