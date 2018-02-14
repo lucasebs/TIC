@@ -58,7 +58,6 @@ def shannon_fano(conjunto):
     max_prob = 0
     max_prob = entropia(conjunto)
     conjunto1 = sorted(conjunto, key=lambda elemento: elemento.valor)
-    # conjunto1 = conjunto
     conjunto0 = []
 
     print("conjunto1")
@@ -124,14 +123,14 @@ def shannon_fano(conjunto):
 
     print(codigo)
 
+def main():
+    # F = [15,7,6,6,5]
+	# F = [6,5,4,3,2,1]
+	# F = [6,5,2,1,1]
+	F_aux = []
+	F_el = cria_elementos(F)
+	shannon_fano(F_el)
 
-F = [15,7,6,6,5]
-# F = [6,5,4,3,2,1]
-# F = [6,5,2,1,1]
-F_aux = []
-F_el = cria_elementos(F)
-# print(F_el)
-shannon_fano(F_el)
 
-# for el in F_aux:
-#     print(el)
+if __name__ == "__main__":
+    main()
