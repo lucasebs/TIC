@@ -60,9 +60,9 @@ def shannon_fano(conjunto):
     conjunto1 = sorted(conjunto, key=lambda elemento: elemento.valor)
     conjunto0 = []
 
-    print("conjunto1")
-    for elemento in conjunto1:
-        print(elemento.valor)
+    # print("conjunto1")
+    # for elemento in conjunto1:
+    #     print(elemento.valor)
 
     aux = 0
     # while prob <= entropia(conjunto1):
@@ -94,15 +94,15 @@ def shannon_fano(conjunto):
     # conjunto1 = sorted(conjunto1, key=lambda elemento: elemento.valor, reverse = True)
 
 
-    print("conj1")
+    # print("conj1")
     for elemento in conjunto1:
         elemento.codigo += '1'   
-        print(str(elemento.codigo) + ' - ' + str(elemento.valor))
+        # print(str(elemento.codigo) + ' - ' + str(elemento.valor))
 
-    print("conj0")
+    # print("conj0")
     for elemento in conjunto0:
         elemento.codigo += '0'
-        print(str(elemento.codigo) + ' - ' + str(elemento.valor))
+        # print(str(elemento.codigo) + ' - ' + str(elemento.valor))
 
     if len(conjunto0) > 1:
         shannon_fano(conjunto0)
@@ -125,7 +125,7 @@ def shannon_fano(conjunto):
 
 def main():
     # F = [15,7,6,6,5]
-	# F = [6,5,4,3,2,1]
+	F = [6,5,4,3,2,1]
 	# F = [6,5,2,1,1]
 	F_aux = []
 	F_el = cria_elementos(F)
