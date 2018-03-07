@@ -1,9 +1,12 @@
 from numpy.lib.scimath import log2
+# import binascii
+# import codecs
 
 class Elemento:
     """docstring for ClassName"""
-    def __init__(self, valor):
+    def __init__(self, valor, dado):
         self.valor = valor
+        self.dado = dado
         self.codigo = ''
         self.auto_info = 0
 
@@ -12,8 +15,6 @@ class Elemento:
 
     def __repr__(self):
         return repr((self.valor, self.codigo))
-
-
 
 # Read File #
 def get_text():
@@ -24,11 +25,19 @@ def get_text():
 		text += line
 	return text
 
-def get_chars():
+def write_text(name, text):
+	file_name = name + ".txt"
+	fl = open(file_name,"w") 
+	fl.writelines(text) 
+	fl.close() 
+
+def get_chars(text):
 	chars = []
-	for char in get_text():
-	 	chars.append(char)
-	print(chars)
+	for char in text:
+		chars.append(char)
+		# if char is not "\n":
+	 # 		chars.append(char)
+	# print(chars)
 
 	# words = text.split()
 	# chars = []
@@ -39,33 +48,39 @@ def get_chars():
 
 	return chars
 
-def frequencia():
-	chars = get_chars()
+def frequencia(text):
+	chars = get_chars(text)
 	charset = set(chars)
 	freq_dict = {char: chars.count(char) for char in chars}
-	freq = []
-	for char in charset:
-		freq.append(freq_dict[char])
-	return freq
+	# freq = []
+	# for char in charset:
+	# 	freq.append(freq_dict[char])
+	# freq = cria_elementos(freq)
+	# freq = cria_elementos(freq_dict, charset)
+	# return freq
+	return cria_elementos(freq_dict, set(chars))
 
 # Encoding #
-def cria_elementos(conjunto):
-    conjunto_aux = []
+def cria_elementos(freq_dict, charset):
+    freq = []
     soma = 0
-    for elemento in conjunto:
-        soma += elemento
-        conjunto_aux.append(Elemento(elemento))
+    # for elemento in conjunto:
+    #     soma += elemento
+    #     conjunto_aux.append(Elemento(elemento))
+    for char in charset:
+    	soma += freq_dict[char]
+    	freq.append(Elemento(freq_dict[char],char))
 
-    for elemento in conjunto_aux:
+    for elemento in freq:
         elemento.auto_info = auto_info(elemento.valor, soma)        
     
-    return conjunto_aux    
+    return freq
 
 def auto_info(freq, soma):
-    prob = float(freq / soma)
+    # prob = float(freq / soma)
     # auto_info = log2(1.0/prob)
-    return log2(1.0/prob)
-
+    # return log2(1.0/prob)
+    return log2(1.0/float(freq / soma))
 
 def max_p(conjunto):
     somatorio = 0
@@ -75,9 +90,9 @@ def max_p(conjunto):
 
 def entropia(conjunto):
     entropia = 0
-    n = len(conjunto)
+    # n = len(conjunto)
     for elemento in conjunto:
-        entropia -= (elemento.valor/n* log2(elemento.valor/n))
+        entropia -= (elemento.valor/len(conjunto)* log2(elemento.valor/len(conjunto)))
     return entropia
 
 def soma_elementos(conjunto):
@@ -85,6 +100,44 @@ def soma_elementos(conjunto):
     for elemento in conjunto:
         soma += elemento.valor
     return soma
+
+def get_codigo(conjunto, text):
+	codigo = ''
+	for char in text:
+		for elemento in conjunto:
+			if elemento.dado == char:
+				codigo += elemento.codigo
+	print(codigo)
+	return codigo
+
+def novo_arquivo(codigo):
+
+	# Código adaptado de Shijun Hou: github.com/scotthou94/sf_comp/blob/master/shanno_fano_comp.py
+	listofbytes = []
+	for i in range(int(len(codigo)/8)):
+		listofbytes.append(codigo[(i*8):(i*8+8)])
+	lstlen = len(listofbytes[len(listofbytes)-1])
+
+	if lstlen != 8:
+		for i in range(8-lstlen):
+			listofbytes[len(listofbytes)-1].append('0')
+
+	dcmlst = []
+	for strbyte in listofbytes:
+		strbyte = bytearray(strbyte, 'utf-8')
+		u = 0
+		for i in range(8):
+			u += (strbyte[i]-48)*2**(7-i) 
+		dcmlst.append(u)
+
+	arquivo_n = ''
+	for f in bytearray(dcmlst):
+		arquivo_n += chr(f)
+
+	write_text('text_cod_bin', codigo)
+	write_text('text_cod', arquivo_n)
+
+	print(arquivo_n)
 
 def shannon_fano(conjunto):
     prob = 0
@@ -144,28 +197,38 @@ def shannon_fano(conjunto):
     if len(conjunto1) > 1:
         shannon_fano(conjunto1)
 
-    codigo = ''
+    # codigo = ''
     conjunto_f = []
     for elemento in conjunto1:
         conjunto_f.append(elemento)
     for elemento in conjunto0:
         conjunto_f.append(elemento)
 
-    for elemento in sorted(conjunto_f, key=lambda elemento: elemento.valor, reverse = True):    
-        for i in range(0,elemento.valor):
-            codigo += elemento.codigo
+    return conjunto_f
 
-    # print(codigo)
+    # for elemento in sorted(conjunto_f, key=lambda elemento: elemento.valor, reverse = True):    
+    #     for i in range(0,elemento.valor):
+    #         codigo += elemento.codigo
 
-    return codigo
+    # # print(codigo)
+
+    # return codigo
+    
 
 def main():
-    # F = [15,7,6,6,5]
-	# F = [6,5,4,3,2,1]
-	# F = [6,5,2,1,1]
-	F = frequencia()
-	F_el = cria_elementos(F)
-	print(shannon_fano(F_el))
+    
+	# text = get_text()
+	# F = frequencia(text)
+	
+	# conjunto = shannon_fano(frequencia(get_text()))
+	
+	# print()
+	
+	# # codigo = get_codigo(conjunto, text)
+
+	# print(codigo)
+	novo_arquivo(get_codigo(shannon_fano(frequencia(get_text())), get_text()))
+
 
 
 if __name__ == "__main__":
