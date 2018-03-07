@@ -18,7 +18,7 @@ class Elemento:
 
 # Read File #
 def get_text():
-	arq = open('text.txt', 'r')
+	arq = open('files/input/text.txt', 'r')
 	lines = arq.readlines()
 	text = ''
 	for line in lines:
@@ -26,7 +26,7 @@ def get_text():
 	return text
 
 def write_text(name, text):
-	file_name = name + ".txt"
+	file_name = "files/output/" + name + ".txt"
 	fl = open(file_name,"w") 
 	fl.writelines(text) 
 	fl.close() 
