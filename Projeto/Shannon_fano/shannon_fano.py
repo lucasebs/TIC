@@ -17,16 +17,16 @@ class Elemento:
         return repr((self.valor, self.codigo))
 
 # Read File #
-def get_text():
-	arq = open('files/input/text.txt', 'r')
+def get_text(nome):
+	arq = open('files/input/'+nome+'.txt', 'r')
 	lines = arq.readlines()
 	text = ''
 	for line in lines:
 		text += line
 	return text
 
-def write_text(name, text):
-	file_name = "files/output/" + name + ".txt"
+def write_text(nome, text):
+	file_name = "files/output/" + nome + ".txt"
 	fl = open(file_name,"w") 
 	fl.writelines(text) 
 	fl.close() 
@@ -110,7 +110,7 @@ def get_codigo(conjunto, text):
 	print(codigo)
 	return codigo
 
-def novo_arquivo(codigo):
+def novo_arquivo(codigo, nome):
 
 	# Código adaptado de Shijun Hou: github.com/scotthou94/sf_comp/blob/master/shanno_fano_comp.py
 	listofbytes = []
@@ -134,35 +134,38 @@ def novo_arquivo(codigo):
 	for f in bytearray(dcmlst):
 		arquivo_n += chr(f)
 
-	write_text('text_cod_bin', codigo)
-	write_text('text_cod', arquivo_n)
+	write_text(nome + '_cod_bin', codigo)
+	write_text(nome + 'text_cod', arquivo_n)
 
 	print(arquivo_n)
 
 def shannon_fano(conjunto):
-    prob = 0
+	prob = 0
 
-    max_prob = 0
-    max_prob = entropia(conjunto)
-    conjunto1 = sorted(conjunto, key=lambda elemento: elemento.valor)
-    conjunto0 = []
+	max_prob = 0
+	max_prob = entropia(conjunto)
+	conjunto1 = sorted(conjunto, key=lambda elemento: elemento.valor)
+	conjunto0 = []
 
-    # print("conjunto1")
-    # for elemento in conjunto1:
-    #     print(elemento.valor)
+	# print("conjunto1")
+	# for elemento in conjunto1:
+	#     print(elemento.valor)
 
-    aux = 0
-    # while prob <= entropia(conjunto1):
-    while (prob <= max_prob/2 or 
-        # soma_elementos(conjunto0) < soma_elementos(conjunto1) or
-        aux < soma_elementos(conjunto1)):
-    # for elemento in conjunto1:
-        # if soma_elementos(conjunto0) < soma_elementos(conjunto1):
-        elemento = conjunto1.pop()
-        conjunto0.append(elemento)
-        prob = prob + elemento.auto_info
-        # prob = prob + elemento.valor
-        aux = soma_elementos(conjunto0) + conjunto1[-1].valor
+	aux = 0
+	# while prob <= entropia(conjunto1):
+	# print(max_prob)
+	
+	while (prob <= max_prob/2 or aux < soma_elementos(conjunto1)):
+		# print(soma_elementos(conjunto0))
+		# print(soma_elementos(conjunto1))
+	    # soma_elementos(conjunto0) < soma_elementos(conjunto1) or
+	# for elemento in conjunto1:
+	    # if soma_elementos(conjunto0) < soma_elementos(conjunto1):
+		elemento = conjunto1.pop()
+		conjunto0.append(elemento)
+		prob = prob + elemento.auto_info
+		# prob = prob + elemento.valor
+		aux = soma_elementos(conjunto0) + conjunto1[-1].valor
 
     # if len(conjunto) == 2:
     #     elemento = conjunto1.pop()
@@ -182,29 +185,41 @@ def shannon_fano(conjunto):
 
 
     # print("conj1")
-    for elemento in conjunto1:
-        elemento.codigo += '1'   
-        # print(str(elemento.codigo) + ' - ' + str(elemento.valor))
+	for elemento in conjunto1:
+		elemento.codigo += '1'   
+		# print(str(elemento.codigo) + ' - ' + str(elemento.valor))
 
-    # print("conj0")
-    for elemento in conjunto0:
-        elemento.codigo += '0'
-        # print(str(elemento.codigo) + ' - ' + str(elemento.valor))
+	# print("conj0")
+	for elemento in conjunto0:
+		elemento.codigo += '0'
 
-    if len(conjunto0) > 1:
-        shannon_fano(conjunto0)
+	if len(conjunto1) > 1:
+		shannon_fano(conjunto1)
 
-    if len(conjunto1) > 1:
-        shannon_fano(conjunto1)
+	if len(conjunto0) > 1:
+		shannon_fano(conjunto0)
+
+    # if len(conjunto1) > len(conjunto0):
+    # 	if len(conjunto0) > 1:
+    # 		shannon_fano(conjunto0)
+
+    # 	if len(conjunto1) > 1:
+    # 		shannon_fano(conjunto1)
+    # if len(conjunto0) > len(conjunto0):
+    # 	if len(conjunto1) > 1:
+    # 		shannon_fano(conjunto1)
+
+    # 	if len(conjunto0) > 1:
+    # 		shannon_fano(conjunto0)
 
     # codigo = ''
-    conjunto_f = []
-    for elemento in conjunto1:
-        conjunto_f.append(elemento)
-    for elemento in conjunto0:
-        conjunto_f.append(elemento)
+	conjunto_f = []
+	for elemento in conjunto1:
+	    conjunto_f.append(elemento)
+	for elemento in conjunto0:
+	    conjunto_f.append(elemento)
 
-    return conjunto_f
+	return conjunto_f
 
     # for elemento in sorted(conjunto_f, key=lambda elemento: elemento.valor, reverse = True):    
     #     for i in range(0,elemento.valor):
@@ -227,7 +242,10 @@ def main():
 	# # codigo = get_codigo(conjunto, text)
 
 	# print(codigo)
-	novo_arquivo(get_codigo(shannon_fano(frequencia(get_text())), get_text()))
+	
+	nome = 'text'
+
+	novo_arquivo(get_codigo(shannon_fano(frequencia(get_text(nome))), get_text(nome)), nome)
 
 
 
